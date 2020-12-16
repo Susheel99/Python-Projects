@@ -1,6 +1,48 @@
 from random import randint
+import pygame
+
+# pygame setup
+pygame.init()
+pygame.font.init()
+width, height = 500, 400
+win = pygame.display.set_mode((width, height))
+pygame.display.set_caption("Madlib")
+
+word_font = pygame.font.SysFont("timesnewroman", 30)
+
+black = (0, 0, 0)
+white = (255, 255, 255)
+
+fps = 60
+clock = pygame.time.Clock()
 
 
+def write_screen(words):
+    win.fill(white)
+
+    # print text
+    i = 0
+    for sen in words:
+        i = i + 5
+        text = word_font.render(sen, 1, black)
+        win.blit(text, (50, 10 * i))
+    pygame.display.update()
+
+def print_screen(words):
+    run = True
+    while run:
+        clock.tick(fps)
+        lines = words.split('$')
+        write_screen(lines)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+    pygame.quit()
+
+
+# Functions to take inputs for a random story
 def input1():
     date = input("Enter today's date:")
     name = input("Enter any name:")
@@ -40,35 +82,35 @@ def input4():
 
 def story1():
     words = input1()
-    madlib = "\nDATE:{}\n Please excuse {}\n, who is far too {} to attend {} class.\n".format(words[0], words[1],
+    madlib = "DATE:{}$ Please excuse {}$, who is far too {} to $attend {} class.$".format(words[0], words[1],
                                                                                               words[2],
                                                                                               words[3])
-    print(madlib)
+    print_screen(madlib)
 
 
 def story2():
     words = input2()
-    madlib = "\nDATE:{}\n {} is sick\n with the {} flu.\n Drink more {} and take {} as needed".format(words[0],
+    madlib = "DATE:{}$ {} is sick$ with the {} flu.$ Drink more {} and take ${} as needed".format(words[0],
                                                                                                       words[1],
                                                                                                       words[2],
                                                                                                       words[3],
                                                                                                       words[4])
-    print(madlib)
+    print_screen(madlib)
 
 
 def story3():
     words = input3()
-    madlib = "\nDATE:{}\n {} is authorized\n to be at {} instead of {} class.".format(words[0], words[1], words[2],
+    madlib = "DATE:{}$ {} is authorized$ to be at {} instead $of {} class.".format(words[0], words[1], words[2],
                                                                                       words[3])
-    print(madlib)
+    print_screen(madlib)
 
 
 def story4():
     words = input4()
-    madlib = "\nDate:{}\n {} is too cool\n for {} class.\n Instead, she/he will be\n attending the {}\n".format(
+    madlib = "Date:{}$ {} is too cool$ for {} class.$ Instead, she/he will be$ attending the {}$".format(
         words[0], words[1], words[2],
         words[3])
-    print(madlib)
+    print_screen(madlib)
 
 
 def main():

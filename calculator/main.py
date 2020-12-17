@@ -1,10 +1,22 @@
 from tkinter import *
+from tkinter.messagebox import *
 
 # variables
 font = ('Blinkstar', 30, 'bold')
 
 
 # functions
+def clear(event):
+    ex = text_field.get()
+    ex = ex[0:len(ex)-1]
+    text_field.delete(0, END)
+    text_field.insert(0, ex)
+
+
+def all_clear(event):
+    text_field.delete(0, END)
+
+
 def click_btn_function(event):
     print('button-clicked')
     b = event.widget
@@ -12,10 +24,14 @@ def click_btn_function(event):
     print(text)
 
     if text == '=':
-        exp = text_field.get()
-        ans = eval(exp)
-        text_field.delete(0, END)
-        text_field.insert(0, ans)
+        try:
+            exp = text_field.get()
+            ans = eval(exp)
+            text_field.delete(0, END)
+            text_field.insert(0, ans)
+        except Exception as e:
+            print("Error...", e)
+            showerror("Error", e)
         return
 
     text_field.insert(END, text)
@@ -90,11 +106,11 @@ div_btn.bind('<Button-1>', click_btn_function)
 clear_btn = Button(button_frame, text='<--', font=font, width=11, relief='ridge', activebackground='orange',
                    activeforeground='white')
 clear_btn.grid(row=4, column=0, padx=1, pady=1, columnspan=2)
-clear_btn.bind('<Button-1>', click_btn_function)
+clear_btn.bind('<Button-1>', clear)
 
 allclear_btn = Button(button_frame, text='AC', font=font, width=11, relief='ridge', activebackground='orange',
                       activeforeground='white')
 allclear_btn.grid(row=4, column=2, padx=1, pady=1, columnspan=2)
-allclear_btn.bind('<Button-1>', click_btn_function)
+allclear_btn.bind('<Button-1>', all_clear)
 
 window.mainloop()

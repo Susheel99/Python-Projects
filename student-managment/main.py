@@ -1,5 +1,7 @@
 from tkinter import *
 from tkinter import ttk
+import pymysql
+import stm as stm
 
 
 class Student:
@@ -9,6 +11,15 @@ class Student:
         self.root.geometry("700x500")
         title = Label(self.root, text="Student File Management", bd=10, relief=GROOVE, font=("times new roman", 40, "bold"), bg='crimson', fg='grey')
         title.pack(side=TOP, fill=X)
+
+        # Variables
+        self.Roll_no_var = StringVar()
+        self.name_var = StringVar()
+        self.email_var = StringVar()
+        self.gender_var = StringVar()
+        self.contact_var = StringVar()
+        self.dob_var = StringVar()
+
 
         # Manage frame
         Manage_frame = Frame(self.root, bd=4, relief=RIDGE, bg="CRIMSON")
@@ -21,28 +32,28 @@ class Student:
         lbl = Label(Manage_frame, text="Roll no.", font=("times new roman", 20, "bold"), bg="CRIMSON",fg='white')
         lbl.grid(row=1, column=0, pady=10, padx=20, sticky='w')
 
-        txt = Entry(Manage_frame, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
+        txt = Entry(Manage_frame, textvariable=self.Roll_no_var, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
         txt.grid(row=1, column=1, pady=10, padx=20, sticky='w')
 
         # name
         lbl2 = Label(Manage_frame, text="Name", font=("times new roman", 20, "bold"), bg="CRIMSON", fg='white')
         lbl2.grid(row=2, column=0, pady=10, padx=20, sticky='w')
 
-        txt2 = Entry(Manage_frame, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
+        txt2 = Entry(Manage_frame, textvariable=self.name_var, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
         txt2.grid(row=2, column=1, pady=10, padx=20, sticky='w')
 
         # email
         lbl3 = Label(Manage_frame, text="Email", font=("times new roman", 20, "bold"), bg="CRIMSON", fg='white')
         lbl3.grid(row=3, column=0, pady=10, padx=20, sticky='w')
 
-        txt3 = Entry(Manage_frame, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
+        txt3 = Entry(Manage_frame, textvariable=self.email_var, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
         txt3.grid(row=3, column=1, pady=10, padx=20, sticky='w')
 
         # gender
         lbl4 = Label(Manage_frame, text="Gender", font=("times new roman", 20, "bold"), bg="CRIMSON", fg='white')
         lbl4.grid(row=4, column=0, pady=10, padx=20, sticky='w')
 
-        combo_gender = ttk.Combobox(Manage_frame, font=("times new roman", 13, "bold"),state='readonly')
+        combo_gender = ttk.Combobox(Manage_frame, textvariable=self.gender_var, font=("times new roman", 13, "bold"),state='readonly')
         combo_gender['values'] = ('male', 'female', 'other')
         combo_gender.grid(row=4, column=1,pady=10, padx=20)
 
@@ -50,28 +61,30 @@ class Student:
         lbl5 = Label(Manage_frame, text="Contact", font=("times new roman", 20, "bold"), bg="CRIMSON", fg='white')
         lbl5.grid(row=5, column=0, pady=10, padx=20, sticky='w')
 
-        txt5 = Entry(Manage_frame, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
+        txt5 = Entry(Manage_frame, textvariable=self.contact_var, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
         txt5.grid(row=5, column=1, pady=10, padx=20, sticky='w')
 
         # dob
         lbl6 = Label(Manage_frame, text="D.O.B", font=("times new roman", 20, "bold"), bg="CRIMSON", fg='white')
         lbl6.grid(row=6, column=0, pady=10, padx=20, sticky='w')
 
-        txt6 = Entry(Manage_frame, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
+        txt6 = Entry(Manage_frame, textvariable=self.dob_var, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
         txt6.grid(row=6, column=1, pady=10, padx=20, sticky='w')
 
         #address
         lbl7 = Label(Manage_frame, text="Address", font=("times new roman", 20, "bold"), bg="CRIMSON", fg='white')
         lbl7.grid(row=7, column=0, pady=10, padx=20, sticky='w')
 
-        txt7 = Text(Manage_frame, width=30, height=4, font=("", 10))
-        txt7.grid(row=7, column=1, pady=10, padx=20, sticky='w')
+        self.txt7 = Text(Manage_frame, width=30, height=4, font=("", 10))
+        self.txt7.grid(row=7, column=1, pady=10, padx=20, sticky='w')
+
+
 
         # **buttons**
         btn_frame = Frame(self.root, bd=4, relief=RIDGE, bg="CRIMSON")
         btn_frame.place(x=30, y=650, width=420)
 
-        addbtn = Button(btn_frame, text='Add', width=10).grid(row=0, column=0, padx=10, pady=10)
+        addbtn = Button(btn_frame, text='Add', width=10, command=self.add_students).grid(row=0, column=0, padx=10, pady=10)
         upadatebtn = Button(btn_frame, text='Update', width=10).grid(row=0, column=1, padx=10, pady=10)
         deletebtn = Button(btn_frame, text='Delete', width=10).grid(row=0, column=2, padx=10, pady=10)
         clearbtn = Button(btn_frame, text='Clear', width=10).grid(row=0, column=3, padx=10, pady=10)
@@ -126,6 +139,19 @@ class Student:
         student_table.column('address', width=150)
 
         student_table.pack(fill=BOTH, expand=1)
+
+    def add_students(self):
+        con = pymysql.connect(host="localhost", user="root", password="", database="stm")
+        cur = con.cursor()
+        cur.execute("insert into students values(%s,%s,%s,%s,%s,%s,%s)",(self.Roll_no_var.get(),
+                                                                         self.name_var.get(),
+                                                                         self.email_var.get(),
+                                                                         self.gender_var.get(),
+                                                                         self.contact_var.get(),
+                                                                         self.dob_var.get(),
+                                                                         self.txt7.get('1.0', END)))
+        con.commit()
+        con.close()
 
 
 

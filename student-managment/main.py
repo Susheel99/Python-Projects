@@ -91,7 +91,7 @@ class Student:
                                                                                          pady=10)
         upadatebtn = Button(btn_frame, text='Update', width=10).grid(row=0, column=1, padx=10, pady=10)
         deletebtn = Button(btn_frame, text='Delete', width=10).grid(row=0, column=2, padx=10, pady=10)
-        clearbtn = Button(btn_frame, text='Clear', width=10).grid(row=0, column=3, padx=10, pady=10)
+        clearbtn = Button(btn_frame, text='Clear', width=10, command=self.clear).grid(row=0, column=3, padx=10, pady=10)
 
         # _______Data frame_______
         data_frame = Frame(self.root, bd=4, relief=RIDGE, bg="CRIMSON")
@@ -117,30 +117,31 @@ class Student:
 
         scroll_x = Scrollbar(table_frame, orient=HORIZONTAL)
         scroll_y = Scrollbar(table_frame, orient=VERTICAL)
-        student_table = ttk.Treeview(table_frame,
+        self.student_table = ttk.Treeview(table_frame,
                                      column=('roll', 'name', 'email', 'gender', 'contact', 'dob', 'address'),
                                      xscrollcommand=scroll_x.set, yscrollcommand=scroll_y.set)
         scroll_y.pack(side=RIGHT, fill=Y)
         scroll_x.pack(side=BOTTOM, fill=X)
-        scroll_y.config(command=student_table.yview)
-        scroll_x.config(command=student_table.xview)
-        student_table.heading('roll', text='Roll No')
-        student_table.heading('name', text='Name')
-        student_table.heading('email', text='Email')
-        student_table.heading('gender', text='Gender')
-        student_table.heading('contact', text='Contact')
-        student_table.heading('dob', text='D.O.B')
-        student_table.heading('address', text='Address')
-        student_table['show'] = 'headings'
-        student_table.column('roll', width=50)
-        student_table.column('name', width=100)
-        student_table.column('email', width=100)
-        student_table.column('gender', width=100)
-        student_table.column('contact', width=100)
-        student_table.column('dob', width=100)
-        student_table.column('address', width=150)
+        scroll_y.config(command=self.student_table.yview)
+        scroll_x.config(command=self.student_table.xview)
+        self.student_table.heading('roll', text='Roll No')
+        self.student_table.heading('name', text='Name')
+        self.student_table.heading('email', text='Email')
+        self.student_table.heading('gender', text='Gender')
+        self.student_table.heading('contact', text='Contact')
+        self.student_table.heading('dob', text='D.O.B')
+        self.student_table.heading('address', text='Address')
+        self.student_table['show'] = 'headings'
+        self.student_table.column('roll', width=50)
+        self.student_table.column('name', width=100)
+        self.student_table.column('email', width=100)
+        self.student_table.column('gender', width=100)
+        self.student_table.column('contact', width=100)
+        self.student_table.column('dob', width=100)
+        self.student_table.column('address', width=150)
 
-        student_table.pack(fill=BOTH, expand=1)
+        self.student_table.pack(fill=BOTH, expand=1)
+        self.fetch_data()
 
     def add_students(self):
         con = pymysql.connect(host="localhost", user="root", password="", database="stm")
@@ -153,7 +154,31 @@ class Student:
                                                                           self.dob_var.get(),
                                                                           self.txt7.get('1.0', END)))
         con.commit()
+        self.fetch_data()
+        self.clear()
         con.close()
+
+    def fetch_data(self):
+        con = pymysql.connect(host="localhost", user="root", password="", database="stm")
+        cur = con.cursor()
+        cur.execute("select * from students")
+        rows = cur.fetchall()
+        if len(rows) != 0:
+            self.student_table.delete(*self.student_table.get_children())
+            for row in rows:
+                self.student_table.insert('', END, values=row)
+            con.commit()
+        con.close()
+
+    def clear(self):
+        self.Roll_no_var.set("")
+        self.email_var.set("")
+        self.name_var.set("")
+        self.dob_var.set("")
+        self.contact_var.set("")
+        self.gender_var.set("")
+        self.txt7.delete("1.0", END)
+
 
 
 root = Tk()

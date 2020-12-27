@@ -39,13 +39,15 @@ def delete_file_contents(path):
     with open(path, 'w'):
         pass
 
+
 # read a file and convert it into set items
 def file_to_set(file_name):
     results = set()
     with open(file_name, 'rt') as f:
         for line in f:
-            results.add(line.replace('\n',''))
+            results.add(line.replace('\n', ''))
     return results
+
 
 # writing set items to a file
 def set_to_file(links, file):

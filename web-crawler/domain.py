@@ -5,11 +5,11 @@ from urllib.parse import urlparse
 def get_domain_name(url):
     try:
         results = get_sub_domain_name(url).split('.')
-        return  results[-3] + '.' + results[-2] + '.' + results[-1]
+        return results[-2] + '.' + results[-1]
     except:
         return ''
 
-
+#results[-3] + '.'
 # Get subdomain name
 def get_sub_domain_name(url):
     try:
@@ -18,4 +18,3 @@ def get_sub_domain_name(url):
         return ''
 
 
-print((get_domain_name('http://susheel.pythonanywhere.com/')))

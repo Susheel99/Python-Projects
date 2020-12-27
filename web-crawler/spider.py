@@ -1,6 +1,6 @@
 from urllib.request import urlopen
 from link_finder import LinkFinder
-from main import *
+from general import *
 
 class Spider:
     # creating class variables

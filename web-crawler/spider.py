@@ -2,6 +2,7 @@ from urllib.request import urlopen
 from link_finder import LinkFinder
 from general import *
 
+
 class Spider:
     # creating class variables
     project_name = ''
@@ -31,7 +32,7 @@ class Spider:
     @staticmethod
     def crawl_page(thread_name, page_url):
         if page_url not in Spider.crawled:
-            print(thread_name + 'now crawling' + page_url)
+            print(thread_name + ' now crawling ' + page_url)
             print('Queue ' + str(len(Spider.queue)) + ' | Crawled ' + str(len(Spider.crawled)))
             Spider.add_links_to_queue(Spider.gather_links(page_url))
             Spider.queue.remove(page_url)
@@ -68,11 +69,3 @@ class Spider:
     def update_files():
         set_to_file(Spider.queue, Spider.queue_file)
         set_to_file(Spider.crawled, Spider.crawled_file)
-
-
-
-
-
-
-
-

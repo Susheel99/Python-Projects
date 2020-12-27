@@ -8,7 +8,7 @@ def create_project_dir(directory):
         os.makedirs(directory)
 
 
-create_project_dir('thenewboston')
+#create_project_dir('thenewboston')
 
 
 # create queue and crawled files

@@ -14,11 +14,17 @@ class LinkFinder(HTMLParser):
             for (attribute, value) in attrs:
                 if attribute == 'href':
                     url = parse.urljoin(self.base_url, value)
+                    #print(url)
                     self.links.add(url)
 
     def page_links(self):
+        print("--page_links--")
+        print(self.links)
+        print("--page_links--")
         return self.links
 
     def error(self, message):
         pass
 
+finder = LinkFinder('https://www.thenewboston.com/', 'https://www.thenewboston.com/')
+finder.feed('https://www.thenewboston.com/')
